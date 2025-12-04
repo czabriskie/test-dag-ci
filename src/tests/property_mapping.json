@@ -1,0 +1,5 @@
+{
+    "experiment_document.device_system_document.device_identifier": "device_identifier",
+    "experiment_document.device_system_document.model_number": "model_number",
+    "experiment_document.device_system_document.equipment_serial_number": "equipment_serial_number"
+}

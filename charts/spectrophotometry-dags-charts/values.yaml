@@ -1,0 +1,45 @@
+############################
+### DAGS
+############################
+
+appName: "spectrophotometry"
+dagVersion: ""
+
+parsers:
+  foss_nirs_6500:
+    adiConfigs:
+      sourcePath: "/home/zontal_bot/spectrophotometry/file-watcher/foss_nirs_6500/"
+      includePattern: "**/*.txt"
+      minimumAgeSeconds: "2"
+      waitType: "simple"
+      timeoutSeconds: "60"
+      watchFor: FILE
+      fileRemovalAfterDays: -1
+      hostName: ""
+      devicePcId: ""
+  thermofisher_nanodrop:
+    adiConfigs:
+      sourcePath: "/home/zontal_bot/spectrophotometry/file-watcher/thermofisher_nanodrop/"
+      includePattern: "**/*.{txt,csv,ndj,tsv,nd8}"
+      minimumAgeSeconds: "2"
+      waitType: "simple"
+      timeoutSeconds: "60"
+      watchFor: FILE
+      fileRemovalAfterDays: -1
+      hostName: ""
+      devicePcId: ""
+
+
+############################
+### Airflow Variables
+############################
+
+airflowVariables:
+  foss_nirs_6500_image:
+    value: "zontal/applications/spectrophotometry/zontal-foss-nirs-6500:0.2.0"
+    description: "FOSS NIRS 6500 image"
+  thermofisher_nanodrop_image:
+    value: "zontal/applications/spectrophotometry/zontal-thermofisher-nanodrop:0.2.0"
+    description: "ThermoFisher NanoDrop image"
+
+setZontalConfigs: false

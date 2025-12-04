@@ -1,0 +1,14 @@
+apiVersion: v2
+name: spectrophotometry-dags-chart
+description: A Helm chart for deploying ZONTAL Spectrophotometry DAGs
+
+type: application
+
+version: 0.1.0
+
+appVersion: 0.1.0
+
+dependencies:
+  - name: dag-charts
+    repository: "s3://zontal-release-artifacts/zontal/applications/application-helm-libraries/chart-repo/"
+    version: ^1.0

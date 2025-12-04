@@ -1,0 +1,17 @@
+# Dag Installation
+---
+{{ include "dag.configMap" . }}
+---
+{{ include "dag.install" . }}
+---
+{{ include "dag.uninstall" . }}
+---
+{{ include "dag.setAirflowVariables" . }}
+---
+{{ include "dag.deleteAirflowVariables" . }}
+---
+# Setting ZONTAL Configurations
+{{ include "zontalConfigs.configMap" . }}
+---
+{{ include "zontalConfigs.createDagConfigs" . }}
+---

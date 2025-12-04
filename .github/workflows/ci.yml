@@ -1,0 +1,100 @@
+name: CI
+
+on:
+    push:
+        branches: ["**"] # Run on all branches
+    pull_request:
+        branches: ["main", "master"]
+
+jobs:
+    deploy-dags:
+        runs-on: ubuntu-latest
+        environment: dev
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set Repository Name and Branch/Tag
+              run: |
+                  echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+                  if [[ $GITHUB_REF == refs/tags/* ]]; then
+                    REF=${GITHUB_REF#refs/tags/}
+                  else
+                    REF=${GITHUB_REF#refs/heads/}
+                  fi
+                  # Sanitize REF_NAME: replace / and space with -
+                  echo "REF_NAME=$(echo $REF | tr '/ ' '-')" >> $GITHUB_ENV
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Install Helm
+              uses: azure/setup-helm@v4
+              with:
+                  version: "v3.13.0"
+
+            - name: Remove old artifacts from S3
+              env:
+                  S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+                  S3_REGION: ${{ secrets.AWS_REGION }}
+              run: |
+                  chmod +x .github/scripts/staging/remove-files.sh
+                  .github/scripts/staging/remove-files.sh
+
+            - name: Create staging directory
+              run: mkdir -p ./staging
+
+            - name: Package Helm Charts
+              env:
+                  UPDATE_CHART_DEPENDENCIES: ${{ vars.UPDATE_CHART_DEPENDENCIES || 'false' }}
+              run: |
+                  chmod +x .github/scripts/helm/package-charts.sh
+                  .github/scripts/helm/package-charts.sh
+
+            - name: Package DAGs and Airflow configurations
+              run: |
+                  # Define staging directories
+                  STAGING_DIRS="connections drivers plugins pools variables"
+
+                  # Package any existing staging directories
+                  for dir in $STAGING_DIRS; do
+                    if [ -d "./$dir" ]; then
+                      zip -r -q ./staging/${REPO_NAME}-${REF_NAME}.zip $dir
+                    fi
+                  done
+
+                  # Package DAGs from src directory
+                  if [ -z "$STRICT_DAGS_STRUCTURE" ]; then
+                    cd src
+                    zip -r -q -u ../staging/${REPO_NAME}-${REF_NAME}.zip * -x "tests/*"
+                    cd ..
+                  else
+                    mkdir dags
+                    if [ -d src/dags ]; then
+                      mv src/dags/* dags/
+                    else
+                      mv src/* dags/
+                    fi
+                    zip -r -q -u ./staging/${REPO_NAME}-${REF_NAME}.zip dags -x "dags/tests/*" "dags/py.typed"
+                  fi
+
+            - name: Copy LICENSE files to staging
+              run: |
+                  cp LICENSE* ./staging/ 2>/dev/null || true
+
+            - name: Copy BOM file if exists
+              run: |
+                  cp bom.yml ./staging/ 2>/dev/null || true
+
+            - name: Upload artifacts to S3
+              env:
+                  S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+                  S3_REGION: ${{ secrets.AWS_REGION }}
+              run: |
+                  chmod +x .github/scripts/staging/copy-files.sh
+                  .github/scripts/staging/copy-files.sh

@@ -1,0 +1,6 @@
+version: 1.0
+type: project
+dependencies:
+  - application-helm-libraries==1.0.1
+  - zontal-foss-nirs-6500==0.2.0
+  - zontal-thermofisher-nanodrop==0.2.0
