@@ -1,6 +1,6 @@
 dependencies:
 - name: dag-charts
-  repository: s3://zontal-release-artifacts/zontal/applications/application-helm-libraries/chart-repo/
+  repository: s3://zontal-helm/
   version: 1.0.2
-digest: sha256:a634fa1bdf83cfd5765d6a3ed6223962f2876f12fe8bb244ee53b1c990f46882
-generated: "2025-11-04T15:40:12.551229-07:00"
+digest: sha256:397c3c58ccc086d46b9579a7cf5a9331965eabe9dd822d8fc08877736e38556e
+generated: "2025-12-04T15:22:14.435307-07:00"

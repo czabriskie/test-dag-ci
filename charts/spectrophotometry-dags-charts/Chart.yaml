@@ -10,5 +10,5 @@ appVersion: 0.1.0
 
 dependencies:
   - name: dag-charts
-    repository: "s3://zontal-release-artifacts/zontal/applications/application-helm-libraries/chart-repo/"
+    repository: "s3://zontal-helm/"
     version: ^1.0
