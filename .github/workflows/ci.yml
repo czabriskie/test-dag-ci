@@ -33,10 +33,10 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: ${{ secrets.AWS_REGION }}
 
-            - name: Install Helm
-              uses: azure/setup-helm@v4
-              with:
-                  version: "v3.13.0"
+            # - name: Install Helm
+            #   uses: azure/setup-helm@v4
+            #   with:
+            #       version: "v3.13.0"
 
             - name: Remove old artifacts from S3
               env:
@@ -49,12 +49,12 @@ jobs:
             - name: Create staging directory
               run: mkdir -p ./staging
 
-            - name: Package Helm Charts
-              env:
-                  UPDATE_CHART_DEPENDENCIES: ${{ vars.UPDATE_CHART_DEPENDENCIES || 'false' }}
-              run: |
-                  chmod +x .github/scripts/helm/package-charts.sh
-                  .github/scripts/helm/package-charts.sh
+            # - name: Package Helm Charts
+            #   env:
+            #       UPDATE_CHART_DEPENDENCIES: ${{ vars.UPDATE_CHART_DEPENDENCIES || 'false' }}
+            #   run: |
+            #       chmod +x .github/scripts/helm/package-charts.sh
+            #       .github/scripts/helm/package-charts.sh
 
             - name: Package DAGs and Airflow configurations
               run: |
