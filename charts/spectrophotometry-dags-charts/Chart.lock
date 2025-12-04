@@ -1,6 +1,0 @@
-dependencies:
-- name: dag-charts
-  repository: s3://zontal-helm/
-  version: 1.0.2
-digest: sha256:397c3c58ccc086d46b9579a7cf5a9331965eabe9dd822d8fc08877736e38556e
-generated: "2025-12-04T15:22:14.435307-07:00"
