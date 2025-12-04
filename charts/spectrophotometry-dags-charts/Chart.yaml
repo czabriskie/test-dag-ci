@@ -1,5 +1,5 @@
 apiVersion: v2
-name: spectrophotometry-dags-chart
+name: test-dag-ci
 description: A Helm chart for deploying ZONTAL Spectrophotometry DAGs
 
 type: application
