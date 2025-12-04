@@ -55,6 +55,7 @@ jobs:
 
             - name: Package Helm Charts
               env:
+                  HELM_S3_REPO: ${{ secrets.HELM_S3_REPO }}
                   UPDATE_CHART_DEPENDENCIES: ${{ vars.UPDATE_CHART_DEPENDENCIES || 'false' }}
               run: |
                   chmod +x .github/scripts/helm/package-charts.sh

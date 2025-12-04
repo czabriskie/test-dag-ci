@@ -2,6 +2,13 @@
 set -e
 
 if [ -d "charts" ]; then
+  # Add Helm S3 repository if HELM_S3_REPO is set
+  if [ -n "$HELM_S3_REPO" ]; then
+    echo "🔄 Adding Helm S3 repository: $HELM_S3_REPO"
+    helm repo add zontal-helm "$HELM_S3_REPO" --force-update
+    helm repo update
+  fi
+
   for chart in charts/*; do
     echo "📝 Updating appVersion for chart: $chart"
     sed -i.bak 's/^appVersion:.*/appVersion: '"${REF_NAME}"'/' "$chart"/Chart.yaml
